@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), "Inter", sans-serif;
+}
+
+body {
+  background-color: #09090b; /* Pure dark mode zinc-950 background */
+  color: #fafafa;
+  font-family: var(--font-sans);
+}
+
+/* Pure Dark Mode CSS Variable Overrides to match styles seamlessly */
+.bg-white {
+  background-color: #18181b !important; /* Zinc-900 */
+}
+.text-black {
+  color: #fafafa !important;
+}
+.text-neutral-600 {
+  color: #a1a1aa !important;
+}
+.border-[#E5E7EB], .border-[#E5E7EB]\/30, .border-neutral-100 {
+  border-color: #27272a !important; /* Zinc-800 */
+}
+.bg-[#FAFAFA] {
+  background-color: #09090b !important;
+}
+.text-[#6B7280], .text-[#9CA3AF] {
+  color: #71717a !important;
+}
+.border-[#F1F1F1] {
+  border-color: #27272a !important;
+}
+.bg-[#F8F8F8] {
+  background-color: #27272a !important;
+}
+.bg-neutral-100 {
+  background-color: #27272a !important;
+}
+input.bg-white {
+  background-color: #18181b !important;
+  color: #fafafa !important;
+  border-color: #27272a !important;
+}
+button.bg-black {
+  background-color: #fafafa !important; /* Pure white button */
+  color: #09090b !important; /* Pure black text */
+}
+.bg-emerald-50, .bg-emerald-50\/10 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: #10b981 !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+}
+.bg-amber-50, .bg-amber-50\/10 {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  color: #f59e0b !important;
+  border-color: rgba(245, 158, 11, 0.2) !important;
+}
+.bg-[#FAFAFA], .bg-[#FAFAFA]\/50, .bg-neutral-50 {
+  background-color: #18181b !important;
+}
+.bg-white\/80, .bg-white\/10 {
+  background-color: rgba(24, 24, 27, 0.8) !important;
+}
+a.bg-\[\#FAFAFA\] {
+  background-color: #18181b !important;
+  color: #fafafa !important;
+  border-color: #27272a !important;
+}
+a.bg-\[\#FAFAFA\]:hover {
+  background-color: #27272a !important;
+}
+img {
+  filter: brightness(0.9) contrast(1.1);
+}
+.bg-white\/60 {
+  background-color: rgba(24, 24, 27, 0.85) !important;
+}
+.shadow-sm, .shadow-md, .shadow-lg {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5) !important;
+}
+.text-amber-600 {
+  color: #f59e0b !important;
+}
+.border-emerald-500 {
+  border-color: #10b981 !important;
+}
+.bg-emerald-500 {
+  background-color: #10b981 !important;
+}
+
+
+
