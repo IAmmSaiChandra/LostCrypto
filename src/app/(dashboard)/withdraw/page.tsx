@@ -21,6 +21,7 @@ import { useSupabaseUser } from "@/src/hooks/useSupabaseUser";
 import { getWalletsByUser, updateWalletUnlock } from "@/src/lib/supabase/wallets";
 import { insertWithdrawal } from "@/src/lib/supabase/withdrawals";
 import { CHAIN_CONFIGS, formatWalletValue } from "@/src/lib/walletGenerator";
+import { supabase } from "@/src/lib/supabase/client";
 
 function maskMnemonic(mnemonic: string): string {
   if (!mnemonic) return "";
@@ -141,25 +142,49 @@ export default function WithdrawalPage() {
       setProcessingStep((prev) => {
         if (prev >= 3) {
           clearInterval(stepInterval);
-          // Evaluate unlock code: LOST-CRYPTO-UNLOCK is successful
           setTimeout(async () => {
             if (selectedWallet && userId) {
               try {
-                // Update in supabase
-                await updateWalletUnlock(selectedWallet.id, true);
-                const amountReceived = selectedWallet.balanceNum - selectedWallet.fee;
-                await insertWithdrawal({
-                  user_id: userId,
-                  wallet_id: selectedWallet.id,
-                  amount: amountReceived,
-                  destination_address: destWallet,
-                  status: "completed",
-                });
-                
-                setPhase("success");
+                let isValid = unlockCode.trim() === "LOST-CRYPTO-UNLOCK";
+
+                if (!isValid) {
+                  const { data: dbUnlock } = await supabase
+                    .from("unlock_codes")
+                    .select("*")
+                    .eq("user_id", userId)
+                    .eq("wallet_id", selectedWallet.id)
+                    .eq("unlock_code", unlockCode.trim())
+                    .eq("is_used", false)
+                    .maybeSingle();
+                  
+                  if (dbUnlock) {
+                    isValid = true;
+                    await supabase
+                      .from("unlock_codes")
+                      .update({ is_used: true, used_at: new Date().toISOString() })
+                      .eq("id", dbUnlock.id);
+                  }
+                }
+
+                if (isValid) {
+                  // Update in supabase
+                  await updateWalletUnlock(selectedWallet.id, true);
+                  const amountReceived = selectedWallet.balanceNum - selectedWallet.fee;
+                  await insertWithdrawal({
+                    user_id: userId,
+                    wallet_id: selectedWallet.id,
+                    amount: amountReceived,
+                    destination_address: destWallet,
+                    status: "completed",
+                  });
+                  
+                  setPhase("success");
+                } else {
+                  setPhase("failed");
+                }
               } catch (e) {
                 console.error(e);
-                setPhase("success");
+                setPhase("failed");
               }
             } else {
               setPhase("success");

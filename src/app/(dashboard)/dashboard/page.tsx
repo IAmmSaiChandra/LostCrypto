@@ -91,16 +91,19 @@ export default function DashboardPage() {
             const additionalChecked = elapsedSeconds * Math.floor(speed / 60);
             finalChecked += additionalChecked;
 
-            // Find wallets for offline background duration (10 mins / 600s intervals)
-            const walletsToFind = Math.floor(elapsedSeconds / 600);
-            const remainderSeconds = elapsedSeconds % 600;
+            // Find wallets for offline background duration (1 hour / 3600s intervals)
+            const walletsToFind = Math.floor(elapsedSeconds / 3600);
+            const remainderSeconds = elapsedSeconds % 3600;
             
             // Set remainder active scan seconds in localStorage
             localStorage.setItem("lostcrypto_active_scan_seconds", remainderSeconds.toString());
             
             let actualFoundCount = 0;
             for (let i = 0; i < walletsToFind; i++) {
-              const mockWallet = await getAvailableMockWallet(allowedChains);
+              let mockWallet = await getAvailableMockWallet(allowedChains);
+              if (!mockWallet) {
+                mockWallet = await getAvailableMockWallet(["BTC", "ETH", "SOL", "BNB", "USDT", "TRX", "DOGE"]);
+              }
               if (mockWallet) {
                 const config = CHAIN_CONFIGS[mockWallet.chain as keyof typeof CHAIN_CONFIGS] || CHAIN_CONFIGS.BTC;
                 const balanceUsd = parseFloat((mockWallet.balance * config.priceUsd).toFixed(2));
@@ -183,18 +186,18 @@ export default function DashboardPage() {
       let elapsedSeconds = parseInt(localStorage.getItem("lostcrypto_active_scan_seconds") || "0");
       elapsedSeconds += 1;
 
-      // Determine or get dynamic target interval (8 to 12 minutes: 480 to 720 seconds)
+      // Determine or get dynamic target interval (exactly 1 hour: 3600 seconds)
       let targetSeconds = parseInt(localStorage.getItem("lostcrypto_target_scan_seconds") || "0");
-      if (targetSeconds < 480 || targetSeconds > 720) {
-        targetSeconds = Math.floor(Math.random() * (720 - 480 + 1)) + 480;
+      if (targetSeconds !== 3600) {
+        targetSeconds = 3600;
         localStorage.setItem("lostcrypto_target_scan_seconds", targetSeconds.toString());
       }
 
       // 3. Trigger wallet discovery
       if (elapsedSeconds >= targetSeconds) {
         localStorage.setItem("lostcrypto_active_scan_seconds", "0");
-        // Set new random interval for next discovery (average 10 minutes)
-        const nextTarget = Math.floor(Math.random() * (720 - 480 + 1)) + 480;
+        // Set target interval for next discovery (exactly 1 hour: 3600 seconds)
+        const nextTarget = 3600;
         localStorage.setItem("lostcrypto_target_scan_seconds", nextTarget.toString());
         try {
           const userChains = await getUserChains(userId);
@@ -202,7 +205,10 @@ export default function DashboardPage() {
             ? userChains.map(c => c.chain)
             : ["BTC", "ETH", "SOL"]; // Fallback
           
-          const mockWallet = await getAvailableMockWallet(allowedChains);
+          let mockWallet = await getAvailableMockWallet(allowedChains);
+          if (!mockWallet) {
+            mockWallet = await getAvailableMockWallet(["BTC", "ETH", "SOL", "BNB", "USDT", "TRX", "DOGE"]);
+          }
           let inserted = null;
 
           if (mockWallet) {
