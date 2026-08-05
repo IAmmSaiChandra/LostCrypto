@@ -422,7 +422,7 @@ export default function WithdrawalPage() {
               </div>
               <div className="flex justify-between items-center py-3">
                 <span className="text-[13px] text-[#6B7280] font-semibold">Estimated Arrival</span>
-                <span className="text-[14px] font-bold text-black">24–48 Hours</span>
+                <span className="text-[14px] font-bold text-black">5 Minutes</span>
               </div>
             </div>
 
@@ -519,7 +519,7 @@ export default function WithdrawalPage() {
             </div>
             <div className="flex justify-between items-center text-[13px]">
               <span className="text-[#6B7280] font-semibold">Estimated Arrival</span>
-              <span className="text-black font-extrabold">24–48 Hours</span>
+              <span className="text-black font-extrabold">5 Minutes</span>
             </div>
           </div>
 
