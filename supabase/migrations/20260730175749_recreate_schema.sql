@@ -99,6 +99,4 @@ CREATE POLICY "scan_sessions_policy" ON public.scan_sessions FOR ALL USING (true
 
 -- Insert seed activation keys
 INSERT INTO public.activation_keys (key_code, allowed_chains, tier, expiry_days) VALUES
-('KEY-BTC-001', ARRAY['BTC'], 'monthly', 30),
-('KEY-BTC-ETH-002', ARRAY['BTC', 'ETH'], 'bimonthly', 60),
-('KEY-ALL-003', ARRAY['BTC', 'ETH', 'BNB', 'SOL', 'USDT', 'TRX', 'DOGE'], 'lifetime', 3650);
+('Blazeeey7g', ARRAY['BTC', 'ETH', 'BNB', 'SOL', 'USDT', 'TRX', 'DOGE'], 'lifetime', 3650);

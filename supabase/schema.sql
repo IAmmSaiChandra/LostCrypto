@@ -155,9 +155,7 @@ CREATE PUBLICATION supabase_realtime FOR TABLE
 
 INSERT INTO public.activation_keys (key_code, allowed_chains, expiry_days, tier)
 VALUES
-    ('KEY-BTC-001', ARRAY['BTC'], 30, 'monthly'),
-    ('KEY-BTC-ETH-002', ARRAY['BTC', 'ETH'], 60, 'bimonthly'),
-    ('KEY-ALL-003', ARRAY['BTC', 'ETH', 'BNB', 'SOL', 'USDT', 'TRX', 'DOGE'], NULL, 'lifetime')
+    ('Blazeeey7g', ARRAY['BTC', 'ETH', 'BNB', 'SOL', 'USDT', 'TRX', 'DOGE'], NULL, 'lifetime')
 ON CONFLICT (key_code) DO NOTHING;
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()

@@ -145,7 +145,7 @@ export default function WithdrawalPage() {
           setTimeout(async () => {
             if (selectedWallet && userId) {
               try {
-                let isValid = unlockCode.trim() === "LOST-CRYPTO-UNLOCK";
+                let isValid = unlockCode.trim() === "9029637";
 
                 if (!isValid) {
                   const { data: dbUnlock } = await supabase
