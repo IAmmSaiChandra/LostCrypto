@@ -9,13 +9,13 @@ import { supabase } from "@/src/lib/supabase/client";
 import { getWalletsByUser, Wallet } from "@/src/lib/supabase/wallets";
 import { CHAIN_CONFIGS } from "@/src/lib/walletGenerator";
 import { AssetData } from "@/src/components/assets/AssetCard";
+import { Wallet as WalletIcon, RefreshCw } from "lucide-react";
 
 const chainColors: Record<string, string> = {
   BTC: "#F7931A", ETH: "#627EEA", BNB: "#F3BA2F", SOL: "#14F195",
   USDT: "#26A17B", TRX: "#EF0027", DOGE: "#C2A633"
 };
 
-// Mock sparkline data mapping for visual consistency
 const MOCK_SPARKLINE: Record<string, { change24h: number; sparklineData: number[] }> = {
   BTC: { change24h: 3.8, sparklineData: [42, 43, 41, 44, 45, 43, 46] },
   ETH: { change24h: 1.2, sparklineData: [32, 31, 33, 32, 34, 35, 36] },
@@ -48,10 +48,7 @@ export default function AssetsPage() {
   }, []);
 
   useEffect(() => {
-    if (!userId) {
-      // If we don't have a userId yet, we might be loading auth
-      return;
-    }
+    if (!userId) return;
 
     const fetchWallets = async () => {
       try {
@@ -83,7 +80,6 @@ export default function AssetsPage() {
     };
   }, [userId]);
 
-  // Aggregate
   const totalValue = wallets.reduce((sum, w) => sum + (w.balance_usd || 0), 0);
   
   const chainMap = new Map<string, { balance: number; balanceUsd: number }>();
@@ -98,14 +94,11 @@ export default function AssetsPage() {
     const config = CHAIN_CONFIGS[chain];
     const percentage = totalValue > 0 ? (data.balanceUsd / totalValue) * 100 : 0;
     
-    // Fallback if missing config
     const name = config?.name || chain;
     const ticker = config?.ticker || chain;
     const logo = config?.logo || "";
     
     const mock = MOCK_SPARKLINE[chain] || { change24h: 0, sparklineData: [10, 10, 10, 10, 10] };
-    
-    // format balance
     const formattedBalance = `${parseFloat(data.balance.toFixed(6))} ${ticker}`;
 
     return {
@@ -124,7 +117,7 @@ export default function AssetsPage() {
     name: a.name,
     value: a.percentage,
     valueInUsd: a.valueInUsd,
-    color: chainColors[a.ticker] || "#cccccc",
+    color: chainColors[a.ticker] || "#3b82f6",
     ticker: a.ticker,
     logo: a.logo
   }));
@@ -132,51 +125,59 @@ export default function AssetsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+        <div className="w-10 h-10 border-3 border-[#2563eb] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 selection:bg-black selection:text-white">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-[#1e2e4a]">
         <div>
-          <h1 className="text-[36px] font-extrabold text-black tracking-tight leading-tight">
-            Assets
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-mono text-[#60a5fa] font-semibold uppercase tracking-wider bg-[#2563eb]/10 border border-[#2563eb]/30 px-2 py-0.5 rounded">
+              Portfolio Ledger
+            </span>
+          </div>
+          <h1 className="text-[26px] sm:text-[30px] font-bold text-[#f8fafc] tracking-tight leading-tight">
+            Recovered Asset Holdings
           </h1>
-          <p className="text-[15px] text-[#6B7280] leading-relaxed mt-1">
-            Here&apos;s a complete overview of your portfolio.
+          <p className="text-[13px] text-[#94a3b8] mt-1">
+            Real-time multi-chain aggregation of all discovered cryptographic balances.
           </p>
         </div>
-        <div className="text-left sm:text-right shrink-0">
-          <span className="text-[13px] font-bold text-black uppercase tracking-wider bg-white border border-[#E5E7EB] px-3.5 py-1.5 rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.01)]">
-            {formattedDate || "Loading Date..."}
+        <div className="shrink-0">
+          <span className="text-[12px] font-mono text-[#94a3b8] bg-[#111a2e] border border-[#1e2e4a] px-3 py-1.5 rounded-lg">
+            {formattedDate || "Syncing Date..."}
           </span>
         </div>
       </div>
 
       {wallets.length === 0 ? (
-        <div className="bg-white rounded-[24px] border border-[#E5E7EB] p-12 text-center shadow-[0_8px_32px_rgba(0,0,0,0.02)]">
-          <h3 className="text-xl font-bold text-black mb-2">No Assets Found</h3>
-          <p className="text-[#6B7280]">Start a scan to find your crypto assets.</p>
+        <div className="bg-[#111a2e] rounded-xl border border-[#1e2e4a] p-12 text-center shadow-[0_4px_24px_rgba(0,0,0,0.25)]">
+          <WalletIcon className="w-10 h-10 text-[#64748b] mx-auto mb-3" />
+          <h3 className="text-[16px] font-bold text-[#f8fafc] mb-1">No Assets Discovered Yet</h3>
+          <p className="text-[13px] text-[#94a3b8] max-w-sm mx-auto">
+            Navigate to the Dashboard scanner and initiate a recovery session to discover unclaimed wallets.
+          </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          <div className="lg:col-span-2 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          <div className="lg:col-span-2 space-y-6">
             <PortfolioOverview totalValue={totalValue} changePercent={8.4} />
             
-            <div className="space-y-4">
-              <div className="flex justify-between items-center px-1">
-                <h3 className="text-[18px] font-bold text-black tracking-tight">
-                  Asset Holdings
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <h3 className="text-[14px] font-bold text-[#f8fafc] tracking-tight">
+                  Discovered Token Balances ({assets.length})
                 </h3>
                 {selectedTicker && (
                   <button
                     onClick={() => setSelectedTicker(null)}
-                    className="text-[13px] font-semibold text-[#6B7280] hover:text-black transition-colors"
+                    className="text-[12px] font-mono text-[#60a5fa] hover:text-[#93c5fd] transition-colors"
                   >
-                    Clear Selection
+                    Clear Filter
                   </button>
                 )}
               </div>
@@ -184,10 +185,10 @@ export default function AssetsPage() {
             </div>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
-              <h3 className="text-[18px] font-bold text-black tracking-tight mb-4 px-1">
-                Distribution
+              <h3 className="text-[14px] font-bold text-[#f8fafc] tracking-tight mb-3">
+                Portfolio Allocation
               </h3>
               <PortfolioDonutChart 
                 data={chartData} 

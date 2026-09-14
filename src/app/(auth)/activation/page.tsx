@@ -9,21 +9,7 @@ import { ProfileSetupForm } from "@/src/features/activation/components/profile-s
 import { BlockchainSelector } from "@/src/features/activation/components/blockchain-selector";
 import { useActivationStore } from "@/src/store/use-activation-store";
 import { useSupabaseUser } from "@/src/hooks/useSupabaseUser";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-};
+import { Shield } from "lucide-react";
 
 export default function ActivationPage() {
   const { step } = useActivationStore();
@@ -39,77 +25,56 @@ export default function ActivationPage() {
   const isWideLayout = step === "chains";
 
   return (
-    <div className="min-h-screen flex flex-col justify-between items-center py-12 px-6 font-sans relative overflow-hidden selection:bg-black selection:text-white">
-      {/* Decorative Vignette & Subtle Radial Gradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,244,184,0.04),transparent_60%)] pointer-events-none" />
-      <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.015)] pointer-events-none" />
+    <div className="min-h-screen flex flex-col justify-between items-center py-10 px-4 sm:px-6 bg-[#090d16] text-[#f8fafc] font-sans relative overflow-hidden">
+      {/* Top Brand Header */}
+      <header className="flex items-center gap-2 select-none mb-4">
+        <div className="w-7 h-7 rounded-md bg-[#2563eb] flex items-center justify-center shadow-[0_0_12px_rgba(37,99,235,0.4)]">
+          <Shield className="w-3.5 h-3.5 text-white" />
+        </div>
+        <span className="text-[13px] font-extrabold tracking-widest uppercase text-[#f8fafc]">
+          Lost<span className="text-[#3b82f6]">Crypto</span>
+        </span>
+        <span className="text-[10px] font-mono text-[#64748b] bg-[#111a2e] border border-[#1e2e4a] px-1.5 py-0.5 rounded">
+          CORE
+        </span>
+      </header>
       
-      <div />
-      
-      <motion.div
-        animate={{ maxWidth: isWideLayout ? 480 : 460 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full relative z-10"
+      {/* Main Form Box */}
+      <div
+        className="w-full relative z-10 transition-all duration-300"
+        style={{ maxWidth: isWideLayout ? "520px" : "460px" }}
       >
         <AnimatePresence mode="wait">
           {step === "activation" && (
-            <motion.div
-              key="activation-step"
-              variants={containerVariants}
-              initial="hidden"
-              animate="show"
-              exit={{ opacity: 0, y: -12 }}
-              className="space-y-8"
-            >
-              <motion.div variants={itemVariants}>
-                <ActivationCard />
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <SupportCard />
-              </motion.div>
-            </motion.div>
+            <div key="activation-step" className="space-y-6">
+              <ActivationCard />
+              <SupportCard />
+            </div>
           )}
 
           {step === "success" && (
-            <motion.div
-              key="success-step"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            >
+            <div key="success-step">
               <SuccessScreen />
-            </motion.div>
+            </div>
           )}
 
           {step === "profile" && (
-            <motion.div
-              key="profile-step"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-            >
+            <div key="profile-step">
               <ProfileSetupForm />
-            </motion.div>
+            </div>
           )}
 
           {step === "chains" && (
-            <motion.div
-              key="chains-step"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-            >
+            <div key="chains-step">
               <BlockchainSelector />
-            </motion.div>
+            </div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
 
-      <footer className="text-center text-[12px] text-[#6B7280] select-none tracking-wide mt-8 relative z-10">
-        Secure Activation • One-Time Verification
+      <footer className="text-center text-[12px] font-mono text-[#64748b] select-none tracking-wider mt-8 relative z-10 flex items-center gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]" />
+        <span>SECURE INITIALIZATION • CRYPTOGRAPHIC ISOLATION</span>
       </footer>
     </div>
   );

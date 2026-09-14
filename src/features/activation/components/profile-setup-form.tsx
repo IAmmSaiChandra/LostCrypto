@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { motion } from "motion/react";
-import { Loader2 } from "lucide-react";
+import { Loader2, User, Mail, ArrowRight } from "lucide-react";
 import { AvatarPicker } from "./avatar-picker";
 import { useAvatar } from "@/src/hooks/useAvatar";
 import { useActivationStore } from "@/src/store/use-activation-store";
@@ -61,110 +60,115 @@ export function ProfileSetupForm() {
     localStorage.setItem("user-name", data.fullName);
     localStorage.setItem("user-email", data.email);
     
-    // Transition to blockchain selection step
     setStep("chains");
   };
 
   return (
     <div className="w-full flex flex-col justify-start">
-      {/* Dynamic Brand Signature Ghost Mascot watching user write details */}
-      <div className="w-full flex justify-center mb-2">
+      {/* Emblem */}
+      <div className="w-full flex justify-center mb-4">
         <GhostMascot state="profile" />
       </div>
 
-      {/* Morph Title Animation */}
+      {/* Header */}
       <div className="text-center mb-6">
-        <motion.h1
-          layoutId="onboarding-title"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[32px] font-bold text-black tracking-tight"
-        >
-          Let&apos;s set up your profile
-        </motion.h1>
-        <p className="text-[15px] text-[#6B7280] mt-2">
-          Personalize your account to get started.
+        <h1 className="text-[24px] font-bold text-[#f8fafc] tracking-tight">
+          Operator Profile Setup
+        </h1>
+        <p className="text-[14px] text-[#94a3b8] mt-1">
+          Configure your local identity for recovered wallet associations.
         </p>
       </div>
 
-      {/* Avatar Picker Section placed above the inputs */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-6"
-      >
-        <AvatarPicker
-          avatarUrl={avatarUrl}
-          isLoading={avatarLoading}
-          uploadedPhoto={uploadedPhoto}
-          onShuffle={handleShuffle}
-          onUpload={handleUpload}
-          onReset={handleResetToGenerated}
-        />
-      </motion.div>
-
-      <motion.form
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6 bg-white rounded-[24px] border border-[#E5E7EB] p-8 md:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.01)]"
-      >
-        {/* Full Name Input */}
-        <div className="space-y-2">
-          <label htmlFor="full-name" className="text-[14px] font-medium text-black">
-            Full Name
-          </label>
-          <input
-            id="full-name"
-            type="text"
-            placeholder="Enter your full name"
-            {...register("fullName")}
-            className="w-full h-[56px] px-5 rounded-[18px] border border-[#E5E7EB] bg-white text-[16px] text-black placeholder-[#9CA3AF] focus:outline-none focus:border-black focus:ring-0 shadow-sm transition-all duration-200"
+      {/* Form Container */}
+      <div className="bg-[#111a2e] rounded-2xl border border-[#1e2e4a] p-6 md:p-8 shadow-[0_8px_32px_rgba(0,0,0,0.35)] space-y-6">
+        {/* Avatar Picker */}
+        <div className="pb-4 border-b border-[#1e2e4a]">
+          <AvatarPicker
+            avatarUrl={avatarUrl}
+            isLoading={avatarLoading}
+            uploadedPhoto={uploadedPhoto}
+            onShuffle={handleShuffle}
+            onUpload={handleUpload}
+            onReset={handleResetToGenerated}
           />
-          {errors.fullName && (
-            <p className="text-[13px] text-[#6B7280]">
-              {errors.fullName.message}
-            </p>
-          )}
         </div>
 
-        {/* Email Address Input */}
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-[14px] font-medium text-black">
-            Email Address
-          </label>
-          <input
-            id="email"
-            type="email"
-            placeholder="Enter your email address"
-            {...register("email")}
-            className="w-full h-[56px] px-5 rounded-[18px] border border-[#E5E7EB] bg-white text-[16px] text-black placeholder-[#9CA3AF] focus:outline-none focus:border-black focus:ring-0 shadow-sm transition-all duration-200"
-          />
-          {errors.email && (
-            <p className="text-[13px] text-[#6B7280]">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Full Name Input */}
+          <div className="space-y-1.5">
+            <label htmlFor="full-name" className="text-[13px] font-medium text-[#94a3b8]">
+              Operator Name
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#64748b]">
+                <User className="w-4 h-4" />
+              </div>
+              <input
+                id="full-name"
+                type="text"
+                placeholder="e.g. Alex Vance"
+                {...register("fullName")}
+                className={`w-full h-11 pl-10 pr-4 rounded-lg border bg-[#0d1424] text-[14px] text-[#f8fafc] placeholder-[#64748b] focus:outline-none transition-all duration-150 ${
+                  errors.fullName
+                    ? "border-red-500/80 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                    : "border-[#1e2e4a] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20"
+                }`}
+              />
+            </div>
+            {errors.fullName && (
+              <p className="text-[12px] text-red-400 font-medium">
+                {errors.fullName.message}
+              </p>
+            )}
+          </div>
 
-        {/* Continue Button */}
-        <motion.button
-          type="submit"
-          disabled={!isValid || loading}
-          whileHover={isValid && !loading ? { y: -2, opacity: 0.95 } : {}}
-          whileTap={isValid && !loading ? { scale: 0.98 } : {}}
-          className="w-full h-[56px] rounded-[18px] bg-black text-white text-[15px] font-medium flex items-center justify-center transition-all duration-200 disabled:bg-[#D1D5DB] disabled:cursor-not-allowed disabled:transform-none shadow-sm mt-4"
-        >
-          {loading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            "Continue"
-          )}
-        </motion.button>
-      </motion.form>
+          {/* Email Address Input */}
+          <div className="space-y-1.5">
+            <label htmlFor="email" className="text-[13px] font-medium text-[#94a3b8]">
+              Notification Email
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#64748b]">
+                <Mail className="w-4 h-4" />
+              </div>
+              <input
+                id="email"
+                type="email"
+                placeholder="operator@lostcrypto.io"
+                {...register("email")}
+                className={`w-full h-11 pl-10 pr-4 rounded-lg border bg-[#0d1424] text-[14px] text-[#f8fafc] placeholder-[#64748b] focus:outline-none transition-all duration-150 ${
+                  errors.email
+                    ? "border-red-500/80 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                    : "border-[#1e2e4a] focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20"
+                }`}
+              />
+            </div>
+            {errors.email && (
+              <p className="text-[12px] text-red-400 font-medium">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          {/* Continue Button */}
+          <button
+            type="submit"
+            disabled={!isValid || loading}
+            className="w-full h-12 rounded-lg bg-[#2563eb] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white text-[14px] font-semibold flex items-center justify-center gap-2 transition-all duration-150 disabled:bg-[#1e2e4a] disabled:text-[#64748b] disabled:cursor-not-allowed shadow-[0_2px_12px_rgba(37,99,235,0.3)] mt-6"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" /> Saving Profile...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                Continue to Network Selection <ArrowRight className="w-4 h-4" />
+              </span>
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

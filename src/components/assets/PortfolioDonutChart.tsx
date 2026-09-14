@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { ResponsiveContainer, PieChart, Pie as RechartsPie, Cell, Sector } from "recharts";
 import Image from "next/image";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 const Pie = RechartsPie as any;
 
@@ -17,34 +17,31 @@ interface PortfolioDonutChartProps {
 export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelectTicker }: PortfolioDonutChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  // Active indices mapping
   const activeIndex = selectedTicker ? data.findIndex(d => d.ticker === selectedTicker) : null;
   const activeItem = activeIndex !== null && activeIndex !== -1 ? data[activeIndex] : null;
 
-  // Custom shape rendering for expanding the selected/hovered slice
   const renderActiveShape = (props: any) => {
     const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, index } = props;
     const isSelected = index === activeIndex;
     const isHovered = index === hoveredIndex;
     
-    // Offset outwards
-    const offset = isSelected ? 10 : isHovered ? 4 : 0;
+    const offset = isSelected ? 8 : isHovered ? 4 : 0;
     const midAngle = (startAngle + endAngle) / 2;
     const radian = Math.PI / 180;
     const dx = offset * Math.cos(-midAngle * radian);
     const dy = offset * Math.sin(-midAngle * radian);
 
     return (
-      <g style={{ outline: "none", border: "none" }}>
+      <g style={{ outline: "none" }}>
         <Sector
           cx={cx + dx}
           cy={cy + dy}
           innerRadius={innerRadius}
-          outerRadius={outerRadius + (isSelected ? 4 : 0)}
+          outerRadius={outerRadius + (isSelected ? 3 : 0)}
           startAngle={startAngle}
           endAngle={endAngle}
           fill={fill}
-          style={{ outline: "none", border: "none" }}
+          style={{ outline: "none" }}
         />
       </g>
     );
@@ -53,7 +50,6 @@ export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelect
   const handleSliceClick = (_: any, index: number) => {
     const targetTicker = data[index].ticker;
     if (selectedTicker === targetTicker) {
-      // Tap again to deselect
       onSelectTicker(null);
     } else {
       onSelectTicker(targetTicker);
@@ -61,16 +57,9 @@ export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelect
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full bg-white rounded-[24px] border border-[#E5E7EB] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.02)] flex flex-col items-center gap-8 focus:ring-2 focus:ring-[#FFF4B8]/50 focus:outline-none"
-      tabIndex={0}
-      aria-label="Portfolio distribution chart"
-    >
+    <div className="w-full bg-[#111a2e] rounded-xl border border-[#1e2e4a] p-6 shadow-[0_4px_24px_rgba(0,0,0,0.25)] flex flex-col items-center gap-6">
       {/* Chart Canvas */}
-      <div className="relative w-[240px] h-[240px] shrink-0 outline-none select-none">
+      <div className="relative w-[220px] h-[220px] shrink-0 outline-none select-none">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart style={{ outline: "none" }}>
             <Pie
@@ -79,8 +68,8 @@ export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelect
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={76}
-              outerRadius={94}
+              innerRadius={70}
+              outerRadius={88}
               dataKey="value"
               onClick={handleSliceClick}
               onMouseEnter={(_: any, index: number) => setHoveredIndex(index)}
@@ -89,14 +78,13 @@ export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelect
               stroke="none"
               animationBegin={100}
               animationDuration={500}
-              style={{ outline: "none", border: "none", boxShadow: "none" }}
+              style={{ outline: "none" }}
             >
               {data.map((entry, index) => {
                 const isSelected = activeIndex === index;
                 const hasSelection = activeIndex !== null;
                 const isHovered = hoveredIndex === index;
                 
-                // Determine opacity: 35% if other is selected, 100% if selected/hovered/no selection
                 let opacity = 1;
                 if (hasSelection) {
                   opacity = isSelected ? 1 : 0.35;
@@ -109,13 +97,8 @@ export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelect
                     key={`cell-${index}`} 
                     fill={entry.color} 
                     opacity={opacity}
-                    style={{
-                      outline: "none",
-                      border: "none",
-                      filter: isSelected ? `drop-shadow(0 8px 16px ${entry.color}35)` : "none",
-                      transition: "opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), filter 300ms cubic-bezier(0.16, 1, 0.3, 1)"
-                    }}
-                    className="cursor-pointer outline-none focus:outline-none"
+                    style={{ outline: "none" }}
+                    className="cursor-pointer"
                   />
                 );
               })}
@@ -127,53 +110,39 @@ export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelect
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
           <AnimatePresence mode="wait">
             {activeItem ? (
-              <motion.div
-                key={activeItem.ticker}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col items-center justify-center"
-              >
-                <div className="w-7 h-7 rounded-lg bg-neutral-50 border border-neutral-100 flex items-center justify-center mb-1">
-                  <Image src={activeItem.logo} alt={activeItem.name} width={18} height={18} />
+              <div key={activeItem.ticker} className="flex flex-col items-center justify-center text-center px-2">
+                <div className="w-6 h-6 rounded-md bg-[#0d1424] border border-[#1e2e4a] flex items-center justify-center mb-1">
+                  <Image src={activeItem.logo} alt={activeItem.name} width={16} height={16} />
                 </div>
-                <span className="text-[12px] text-[#6B7280] font-bold tracking-wide">
+                <span className="text-[11px] font-mono text-[#94a3b8] truncate max-w-[100px]">
                   {activeItem.name}
                 </span>
-                <span className="text-[20px] font-extrabold text-black mt-0.5 tracking-tight leading-none">
+                <span className="text-[17px] font-bold font-mono text-[#f8fafc] leading-tight">
                   ${activeItem.valueInUsd.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                 </span>
-                <span className="text-[11px] text-emerald-600 font-bold mt-1">
-                  {activeItem.value}% of portfolio
+                <span className="text-[10px] font-mono font-bold text-[#60a5fa] mt-0.5">
+                  {activeItem.value}%
                 </span>
-              </motion.div>
+              </div>
             ) : (
-              <motion.div
-                key="default"
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col items-center justify-center"
-              >
-                <span className="text-[12px] text-[#9CA3AF] font-bold uppercase tracking-wider">
-                  Total Assets
+              <div key="default" className="flex flex-col items-center justify-center text-center px-2">
+                <span className="text-[11px] font-mono text-[#64748b] uppercase tracking-wider">
+                  Valuation
                 </span>
-                <span className="text-[24px] font-extrabold text-black mt-1 leading-none tracking-tight">
+                <span className="text-[19px] font-bold font-mono text-[#f8fafc] leading-tight mt-0.5">
                   ${totalValue.toLocaleString("en-US", { maximumFractionDigits: 0 })}
                 </span>
-                <span className="text-[11px] text-emerald-600 font-bold mt-1 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100/50">
-                  100%
+                <span className="text-[10px] font-mono text-[#3b82f6] mt-0.5 bg-[#2563eb]/10 px-2 py-0.5 rounded border border-[#2563eb]/30">
+                  100% Total
                 </span>
-              </motion.div>
+              </div>
             )}
           </AnimatePresence>
         </div>
       </div>
 
       {/* Legend Grid Section */}
-      <div className="grid grid-cols-2 gap-3 w-full">
+      <div className="grid grid-cols-2 gap-2 w-full">
         {data.map((item, index) => {
           const isSelected = selectedTicker === item.ticker;
           const hasSelection = selectedTicker !== null;
@@ -184,16 +153,16 @@ export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelect
               onClick={() => handleSliceClick(null, index)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className={`flex items-center gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer ${
+              className={`flex items-center gap-2.5 p-2.5 rounded-lg border transition-all cursor-pointer ${
                 isSelected 
-                  ? "bg-neutral-50 border-[#E5E7EB] scale-[1.02] shadow-[0_4px_12px_rgba(0,0,0,0.02)]" 
-                  : "border-transparent hover:bg-neutral-50/50"
-              } ${hasSelection && !isSelected ? "opacity-50" : "opacity-100"}`}
+                  ? "bg-[#172440] border-[#2563eb] shadow-[0_0_12px_rgba(37,99,235,0.15)]" 
+                  : "bg-[#0d1424] border-[#1e2e4a] hover:border-[#2d446e]"
+              } ${hasSelection && !isSelected ? "opacity-40" : "opacity-100"}`}
             >
-              <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
+              <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
               <div className="min-w-0">
-                <p className="text-[13px] font-bold text-black truncate">{item.name}</p>
-                <p className="text-[11px] text-[#6B7280] font-semibold">
+                <p className="text-[12px] font-bold text-[#f8fafc] truncate">{item.name}</p>
+                <p className="text-[10px] font-mono text-[#94a3b8]">
                   {item.ticker} • {item.value}%
                 </p>
               </div>
@@ -201,6 +170,6 @@ export function PortfolioDonutChart({ data, totalValue, selectedTicker, onSelect
           );
         })}
       </div>
-    </motion.div>
+    </div>
   );
 }

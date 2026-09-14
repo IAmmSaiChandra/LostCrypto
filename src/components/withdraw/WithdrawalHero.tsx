@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, animate } from "motion/react";
+import { animate } from "motion/react";
 import { Wallet, Layers, ShieldCheck } from "lucide-react";
 
 export function WithdrawalHero() {
@@ -37,41 +37,32 @@ export function WithdrawalHero() {
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full bg-white rounded-[24px] border border-[#E5E7EB] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-6"
-    >
-      <div className="space-y-3">
-        <span className="text-[13px] font-bold text-[#6B7280] tracking-wider uppercase">
-          Total Recovered Balance
+    <div className="w-full bg-[#111a2e] rounded-xl border border-[#1e2e4a] p-6 md:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.25)] flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="space-y-2">
+        <span className="text-[12px] font-mono text-[#94a3b8] uppercase tracking-wider block">
+          Total Liquid Balance Available for Withdrawal
         </span>
-        <div className="flex items-baseline gap-2">
-          <h2 className="text-[36px] md:text-[42px] font-extrabold text-black tracking-tight leading-none">
+        <div className="flex items-baseline gap-3">
+          <h2 className="text-[32px] md:text-[38px] font-bold font-mono text-[#f8fafc] tracking-tight leading-none">
             ${val.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h2>
         </div>
-        <div className="flex flex-wrap gap-4 pt-1">
-          <span className="text-[13px] text-[#6B7280] flex items-center gap-1.5 font-semibold">
-            <Layers className="w-4 h-4 text-[#FFF4B8]" style={{ fill: "#FFF4B8" }} />
-            {walletCount} Wallets Found
+        <div className="flex flex-wrap items-center gap-3 pt-1 text-[13px]">
+          <span className="text-[#94a3b8] flex items-center gap-1.5 font-mono">
+            <Layers className="w-3.5 h-3.5 text-[#3b82f6]" />
+            {walletCount} Target Wallets Available
           </span>
-          <span className="text-[13px] text-emerald-600 flex items-center gap-1.5 font-bold bg-emerald-50 border border-emerald-200/40 px-3 py-0.5 rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Connected
+          <span className="text-[#1e2e4a]">•</span>
+          <span className="text-emerald-400 flex items-center gap-1.5 font-mono bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            Gateway Authorized
           </span>
         </div>
       </div>
 
-      {/* Animated Wallet Icon / Illustration */}
-      <motion.div
-        animate={{ y: [-3, 3, -3] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="w-16 h-16 rounded-3xl bg-neutral-50 border border-[#F1F1F1] flex items-center justify-center text-black shadow-sm shrink-0"
-      >
-        <Wallet className="w-7 h-7" />
-      </motion.div>
-    </motion.div>
+      <div className="w-14 h-14 rounded-xl bg-[#172440] border border-[#1e2e4a] flex items-center justify-center text-[#3b82f6] shadow-sm shrink-0">
+        <Wallet className="w-6 h-6" />
+      </div>
+    </div>
   );
 }

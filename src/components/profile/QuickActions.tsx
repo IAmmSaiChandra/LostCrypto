@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { User, Mail, Copy, Check, Send, LogOut } from "lucide-react";
+import { User, Copy, Check, LogOut, ExternalLink, Zap } from "lucide-react";
 import { useActivationStore } from "@/src/store/use-activation-store";
 
 interface QuickActionsProps {
@@ -24,7 +23,6 @@ export function QuickActions({ activationKey }: QuickActionsProps) {
   };
 
   const handleLogOut = () => {
-    // Purge local storage and reset
     localStorage.removeItem("user-name");
     localStorage.removeItem("user-email");
     localStorage.removeItem("activation-key");
@@ -36,77 +34,61 @@ export function QuickActions({ activationKey }: QuickActionsProps) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full bg-white rounded-[24px] border border-[#E5E7EB] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.02)] space-y-6"
-    >
-      <h3 className="text-[18px] font-bold text-black tracking-tight">
-        Quick Actions
-      </h3>
+    <div className="w-full bg-[#111a2e] rounded-xl border border-[#1e2e4a] p-6 shadow-[0_4px_24px_rgba(0,0,0,0.25)] space-y-4">
+      <div className="flex items-center gap-2 pb-3 border-b border-[#1e2e4a]">
+        <Zap className="w-4 h-4 text-[#3b82f6]" />
+        <h3 className="text-[15px] font-bold text-[#f8fafc] tracking-tight">
+          Operator Actions
+        </h3>
+      </div>
 
-      <div className="flex flex-col gap-3">
-        {/* Contact Support */}
+      <div className="flex flex-col gap-2.5">
+        {/* Telegram Community */}
         <a
           href="https://t.me/groupkeys"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full h-[52px] rounded-xl border border-[#E5E7EB] hover:bg-[#F8F8F8] text-[14px] text-black font-semibold flex items-center justify-between px-4 transition-all duration-200"
+          className="w-full h-11 rounded-lg bg-[#172440] hover:bg-[#1e3054] border border-[#1e2e4a] hover:border-[#2d446e] text-[13px] text-[#f8fafc] font-medium flex items-center justify-between px-4 transition-all"
         >
-          <span className="flex items-center gap-3">
-            <User className="w-4 h-4 text-black" />
-            Telegram Group
+          <span className="flex items-center gap-2.5">
+            <User className="w-4 h-4 text-[#60a5fa]" />
+            Official Telegram Support
           </span>
-          <span className="text-[12px] text-[#6B7280] font-bold">@rioggz</span>
+          <span className="text-[11px] font-mono text-[#60a5fa] flex items-center gap-1">
+            @rioggz <ExternalLink className="w-3 h-3 text-[#64748b]" />
+          </span>
         </a>
 
         {/* Copy Activation Key */}
         <button
           onClick={handleCopy}
-          className="w-full h-[52px] rounded-xl border border-[#E5E7EB] hover:bg-[#F8F8F8] text-[14px] text-black font-semibold flex items-center justify-between px-4 transition-all duration-200"
+          className="w-full h-11 rounded-lg bg-[#172440] hover:bg-[#1e3054] border border-[#1e2e4a] hover:border-[#2d446e] text-[13px] text-[#f8fafc] font-medium flex items-center justify-between px-4 transition-all"
         >
-          <span className="flex items-center gap-3">
-            <Copy className="w-4 h-4 text-black" />
-            Copy Activation Key
+          <span className="flex items-center gap-2.5">
+            <Copy className="w-4 h-4 text-[#60a5fa]" />
+            Copy License Key
           </span>
-          <AnimatePresence mode="wait">
-            {copied ? (
-              <motion.span
-                key="copied"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-emerald-600 text-[12px] font-bold"
-              >
-                Copied ✓
-              </motion.span>
-            ) : (
-              <motion.span
-                key="idle"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-[12px] text-[#6B7280] font-bold"
-              >
-                Copy
-              </motion.span>
-            )}
-          </AnimatePresence>
+          {copied ? (
+            <span className="text-emerald-400 text-[11px] font-mono font-semibold flex items-center gap-1">
+              <Check className="w-3.5 h-3.5" /> Copied
+            </span>
+          ) : (
+            <span className="text-[11px] font-mono text-[#94a3b8]">Copy</span>
+          )}
         </button>
 
         {/* Log Out */}
         <button
           onClick={handleLogOut}
-          className="w-full h-[52px] rounded-xl bg-red-50 hover:bg-red-100/80 border border-red-100/50 text-[14px] text-red-600 font-bold flex items-center justify-between px-4 transition-all duration-200"
+          className="w-full h-11 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-[13px] text-red-400 font-semibold flex items-center justify-between px-4 transition-all mt-1"
         >
-          <span className="flex items-center gap-3">
+          <span className="flex items-center gap-2.5">
             <LogOut className="w-4 h-4" />
-            Log Out
+            Terminate Operator Session
           </span>
-          <span className="text-[11px] font-bold uppercase tracking-wider">Session</span>
+          <span className="text-[10px] font-mono uppercase tracking-wider">Reset</span>
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 }

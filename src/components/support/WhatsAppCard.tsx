@@ -20,50 +20,41 @@ export function WhatsAppCard() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full bg-white rounded-[24px] border border-[#E5E7EB] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.02)] text-center relative overflow-hidden"
-    >
-      <div className="absolute -right-8 -bottom-8 text-neutral-50/50 pointer-events-none">
-        <Send className="w-36 h-36" />
-      </div>
-
+    <div className="w-full bg-[#111a2e] rounded-xl border border-[#1e2e4a] p-6 shadow-[0_4px_24px_rgba(0,0,0,0.25)] text-center relative overflow-hidden">
       <div className="relative flex flex-col items-center">
         {/* Support Icon */}
-        <div className="w-12 h-12 rounded-full bg-neutral-50 border border-[#F1F1F1] flex items-center justify-center mb-4">
-          <Send className="w-5 h-5 text-black" />
+        <div className="w-12 h-12 rounded-xl bg-[#172440] border border-[#1e2e4a] flex items-center justify-center mb-3 text-[#3b82f6] shadow-[0_0_16px_rgba(37,99,235,0.2)]">
+          <Send className="w-5 h-5" />
         </div>
 
-        <h3 className="text-[18px] font-bold text-black tracking-tight mb-1">
-          Telegram Support Group
+        <h3 className="text-[16px] font-bold text-[#f8fafc] tracking-tight mb-1">
+          Telegram Operator Support
         </h3>
-        <p className="text-[14px] text-[#6B7280] leading-relaxed mb-6 max-w-[280px]">
-          Join the group and Tag the owner @rioggz to get the key.
+        <p className="text-[13px] text-[#94a3b8] leading-relaxed mb-4 max-w-[280px]">
+          Join the community discussion and tag the system administrator <span className="text-[#60a5fa] font-mono">@rioggz</span> for direct clearance.
         </p>
 
         {/* Username focus area */}
-        <div className="text-[28px] font-extrabold text-black tracking-tight mb-6 font-mono selection:bg-black selection:text-white">
+        <div className="px-4 py-2 rounded-lg bg-[#0d1424] border border-[#1e2e4a] text-[22px] font-bold text-[#60a5fa] font-mono mb-5 select-all">
           @rioggz
         </div>
 
         {/* Action Buttons */}
-        <div className="w-full flex flex-col sm:flex-row gap-3 justify-center items-center">
+        <div className="w-full flex flex-col sm:flex-row gap-2.5 justify-center items-center">
           <a
             href="https://t.me/groupkeys"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto h-12 px-6 rounded-xl bg-black hover:bg-black/90 text-white text-[14px] font-semibold flex items-center justify-center gap-2 shadow-sm transition-all duration-200"
+            className="w-full sm:w-auto h-11 px-5 rounded-lg bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-[13px] font-semibold flex items-center justify-center gap-2 shadow-[0_2px_10px_rgba(37,99,235,0.3)] transition-all"
           >
             <Send className="w-4 h-4" />
-            Join Telegram Group
+            Join Telegram
           </a>
           
           <button
             type="button"
             onClick={copyNumber}
-            className="w-full sm:w-auto h-12 px-6 rounded-xl border border-[#E5E7EB] hover:bg-[#F8F8F8] text-[14px] text-black font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+            className="w-full sm:w-auto h-11 px-5 rounded-lg bg-[#172440] hover:bg-[#1e3054] border border-[#1e2e4a] text-[13px] text-[#f8fafc] font-medium flex items-center justify-center gap-2 transition-all"
           >
             <AnimatePresence mode="wait">
               {copied ? (
@@ -72,10 +63,10 @@ export function WhatsAppCard() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="flex items-center gap-1.5"
+                  className="flex items-center gap-1.5 text-emerald-400 font-semibold"
                 >
-                  <Check className="w-4 h-4 text-emerald-500" />
-                  Copied ✓
+                  <Check className="w-4 h-4" />
+                  Copied Link ✓
                 </motion.span>
               ) : (
                 <motion.span
@@ -85,8 +76,8 @@ export function WhatsAppCard() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   className="flex items-center gap-1.5"
                 >
-                  <Copy className="w-4 h-4" />
-                  Copy Group Link
+                  <Copy className="w-4 h-4 text-[#94a3b8]" />
+                  Copy Link
                 </motion.span>
               )}
             </AnimatePresence>
@@ -99,14 +90,14 @@ export function WhatsAppCard() {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="mt-4 flex items-center gap-1 text-[13px] text-amber-600 font-bold"
+              className="mt-3 flex items-center gap-1 text-[12px] text-amber-400 font-medium"
             >
-              <Info className="w-3.5 h-3.5" />
+              <Info className="w-3.5 h-3.5 shrink-0" />
               {notice}
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { RefreshCw, Upload, Sparkles, Image as ImageIcon } from "lucide-react";
+import { RefreshCw, Upload, User } from "lucide-react";
 
 interface AvatarPickerProps {
   avatarUrl: string;
@@ -36,38 +36,26 @@ export function AvatarPicker({
   return (
     <div className="flex flex-col items-center space-y-4">
       {/* Avatar Container */}
-      <div className="relative w-28 h-28 flex items-center justify-center">
-        {/* Soft spinner overlay during load */}
+      <div className="relative w-24 h-24 flex items-center justify-center">
+        {/* Spinner overlay */}
         <AnimatePresence>
           {isLoading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 rounded-full bg-white/60 flex items-center justify-center z-10"
-            >
-              <RefreshCw className="w-8 h-8 text-black animate-spin" />
-            </motion.div>
+            <div className="absolute inset-0 rounded-full bg-[#090d16]/70 backdrop-blur-xs flex items-center justify-center z-10">
+              <RefreshCw className="w-6 h-6 text-[#60a5fa] animate-spin" />
+            </div>
           )}
         </AnimatePresence>
 
-        <div className="w-24 h-24 rounded-full overflow-hidden border border-[#E5E7EB] bg-[#FAFAFA] flex items-center justify-center shadow-sm">
-          <AnimatePresence mode="popLayout">
-            {avatarUrl ? (
-              <motion.img
-                key={avatarUrl}
-                src={avatarUrl}
-                alt="Avatar Preview"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-[#F8F8F8] animate-pulse" />
-            )}
-          </AnimatePresence>
+        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#2563eb]/40 bg-[#0d1424] flex items-center justify-center shadow-[0_0_16px_rgba(37,99,235,0.2)]">
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt="Avatar Preview"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <User className="w-8 h-8 text-[#64748b]" />
+          )}
         </div>
       </div>
 
@@ -77,11 +65,11 @@ export function AvatarPicker({
           type="button"
           disabled={isLoading}
           onClick={onShuffle}
-          className="inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-[#E5E7EB] bg-white text-[14px] text-black font-medium hover:bg-[#F8F8F8] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          aria-label="Shuffle generated avatar"
+          className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg border border-[#1e2e4a] bg-[#172440] text-[12px] text-[#f8fafc] font-medium hover:bg-[#1e3054] hover:border-[#2d446e] transition-all disabled:opacity-50"
+          aria-label="Generate random avatar seed"
         >
-          <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-          Shuffle
+          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+          Generate New
         </button>
 
         <input
@@ -90,26 +78,25 @@ export function AvatarPicker({
           onChange={handleFileChange}
           accept="image/*"
           className="hidden"
-          aria-label="Upload profile photograph"
+          aria-label="Upload custom photo"
         />
 
         <button
           type="button"
           disabled={isLoading}
           onClick={triggerFileInput}
-          className="inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-[#E5E7EB] bg-white text-[14px] text-black font-medium hover:bg-[#F8F8F8] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          aria-label="Upload custom photo"
+          className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg border border-[#1e2e4a] bg-[#172440] text-[12px] text-[#f8fafc] font-medium hover:bg-[#1e3054] hover:border-[#2d446e] transition-all disabled:opacity-50"
+          aria-label="Upload custom image"
         >
-          <Upload className="w-4 h-4" />
-          Upload Photo
+          <Upload className="w-3.5 h-3.5" />
+          Upload Image
         </button>
 
         {uploadedPhoto && (
           <button
             type="button"
             onClick={onReset}
-            className="inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-transparent text-[14px] text-black hover:underline transition-all"
-            aria-label="Reset to generated avatar"
+            className="inline-flex items-center h-9 px-2 rounded text-[12px] text-[#94a3b8] hover:text-[#f8fafc] underline transition-all"
           >
             Reset
           </button>

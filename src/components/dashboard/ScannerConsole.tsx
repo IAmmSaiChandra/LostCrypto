@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { wordlist } from "@/src/lib/constants/wordlist";
+import { Terminal, Clock, Activity } from "lucide-react";
 
 interface ScannerConsoleProps {
   isActive: boolean;
@@ -93,17 +94,6 @@ export function ScannerConsole({ isActive }: ScannerConsoleProps) {
     }
   }, [logs]);
 
-  // Calculate dynamic opacity matching the gradual fade curve
-  const getWordOpacityClass = (index: number): string => {
-    if (index < 5) return "opacity-100";
-    if (index === 5) return "opacity-80";
-    if (index === 6) return "opacity-65";
-    if (index === 7) return "opacity-50";
-    if (index === 8) return "opacity-35";
-    if (index === 9) return "opacity-25";
-    return "opacity-20";
-  };
-
   // Format running time (HH:MM:SS)
   const formatTime = (totalSecs: number): string => {
     const hrs = Math.floor(totalSecs / 3600).toString().padStart(2, "0");
@@ -113,34 +103,32 @@ export function ScannerConsole({ isActive }: ScannerConsoleProps) {
   };
 
   return (
-    <div className="w-full bg-white rounded-[28px] border border-[#E5E7EB] p-6 md:p-8 shadow-[0_8px_32px_rgba(0,0,0,0.02)] flex flex-col h-[400px] relative overflow-hidden transition-opacity duration-300">
+    <div className="w-full bg-[#111a2e] rounded-xl border border-[#1e2e4a] shadow-[0_4px_24px_rgba(0,0,0,0.3)] flex flex-col h-[380px] relative overflow-hidden">
       
-      {/* Console Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-[#F1F1F1] z-10 shrink-0 select-none">
-        <div className="flex flex-col text-left">
-          <span className="text-[13px] font-bold text-black uppercase tracking-wider">
-            Live Mnemonic Generator
-          </span>
-          <span className="text-[11px] text-[#6B7280] font-bold font-mono mt-0.5">
-            Running: {formatTime(secondsRunning)}
+      {/* Console Header Bar */}
+      <div className="flex items-center justify-between px-5 py-3 border-b border-[#1e2e4a] bg-[#0d1424] shrink-0 select-none">
+        <div className="flex items-center gap-2.5">
+          <Terminal className="w-4 h-4 text-[#3b82f6]" />
+          <span className="text-[13px] font-mono font-bold text-[#f8fafc] uppercase tracking-wider">
+            Live Mnemonic Entropy Stream
           </span>
         </div>
         
-        {/* Animated scanning status badge */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5 text-[12px] font-mono text-[#94a3b8]">
+            <Clock className="w-3.5 h-3.5 text-[#64748b]" />
+            <span>{formatTime(secondsRunning)}</span>
+          </div>
+
           {isActive ? (
-            <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200/50 px-3 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] text-emerald-700 font-bold uppercase tracking-wider">
-                ACTIVE
-              </span>
+            <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded text-[11px] font-mono font-bold text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>ACTIVE SCAN</span>
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200/50 px-3 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              <span className="text-[11px] text-amber-700 font-bold uppercase tracking-wider">
-                PAUSED
-              </span>
+            <div className="flex items-center gap-1.5 bg-[#172440] border border-[#1e2e4a] px-2.5 py-0.5 rounded text-[11px] font-mono font-bold text-[#94a3b8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#64748b]" />
+              <span>STANDBY</span>
             </div>
           )}
         </div>
@@ -149,21 +137,31 @@ export function ScannerConsole({ isActive }: ScannerConsoleProps) {
       {/* Terminal logs list */}
       <div
         ref={containerRef}
-        className={`flex-1 overflow-y-auto font-mono text-[12px] py-4 pr-2 space-y-1.5 scrollbar-none transition-all duration-300 ${
-          isActive ? "opacity-100" : "opacity-50"
+        className={`flex-1 overflow-y-auto font-mono text-[12.5px] p-5 space-y-1.5 scrollbar-none bg-[#090d16] ${
+          isActive ? "opacity-100" : "opacity-45"
         }`}
       >
         {logs.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-[#9CA3AF] select-none font-semibold">
-            {isActive ? "Starting generator..." : "Scanner offline. Press Start Scanning below."}
+          <div className="h-full flex flex-col items-center justify-center text-[#64748b] select-none font-mono text-center">
+            <Activity className="w-8 h-8 text-[#1e2e4a] mb-2" />
+            <p>{isActive ? "Initializing cryptographic worker threads..." : "Scanner offline. Press 'Start Scanning' below to initiate."}</p>
           </div>
         ) : (
           logs.map((log) => (
-            <div key={log.id} className="whitespace-nowrap overflow-hidden select-all flex gap-1.5 py-0.5 leading-none">
+            <div key={log.id} className="whitespace-nowrap overflow-hidden select-all flex gap-2 leading-tight">
+              <span className="text-[#3b82f6] select-none font-bold">›</span>
               {log.words.map((word, wIdx) => (
                 <span 
                   key={wIdx} 
-                  className={`inline-block text-black font-medium transition-opacity duration-300 ${getWordOpacityClass(wIdx)}`}
+                  className={`inline-block transition-colors ${
+                    wIdx === 0
+                      ? "text-[#60a5fa] font-semibold"
+                      : wIdx < 4
+                      ? "text-[#f8fafc]"
+                      : wIdx < 8
+                      ? "text-[#94a3b8]"
+                      : "text-[#64748b]"
+                  }`}
                 >
                   {word}
                 </span>
@@ -173,9 +171,9 @@ export function ScannerConsole({ isActive }: ScannerConsoleProps) {
         )}
       </div>
 
-      {/* Center scan line pulse indicator */}
+      {/* Top scanline indicator */}
       {isActive && (
-        <div className="absolute top-14 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/25 to-transparent animate-scan pointer-events-none" />
+        <div className="absolute top-11 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#3b82f6] to-transparent pointer-events-none opacity-60" />
       )}
     </div>
   );

@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "motion/react";
 import { useSupabaseUser } from "@/src/hooks/useSupabaseUser";
 import { getUserChains } from "@/src/lib/supabase/userChains";
+import { Cpu } from "lucide-react";
 
 interface NetworkItem {
   id: string;
@@ -34,9 +34,9 @@ export function SelectedNetworks() {
         try {
           const chains = await getUserChains(userId);
           if (chains && chains.length > 0) {
-             setSelectedKeys(chains.map(c => c.chain.toLowerCase()));
+            setSelectedKeys(chains.map((c) => c.chain.toLowerCase()));
           } else {
-             setSelectedKeys(["btc", "eth", "sol"]);
+            setSelectedKeys(["btc", "eth", "sol"]);
           }
         } catch (error) {
           console.error("Failed to load user chains", error);
@@ -57,27 +57,28 @@ export function SelectedNetworks() {
   const activeNetworks = networkList.filter((net) => selectedKeys.includes(net.id));
 
   return (
-    <div className="w-full space-y-3">
-      <h3 className="text-[13px] font-bold text-[#6B7280] uppercase tracking-wider px-1">
-        Scanning Networks
-      </h3>
+    <div className="w-full space-y-2.5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Cpu className="w-4 h-4 text-[#3b82f6]" />
+          <h3 className="text-[12px] font-mono font-semibold text-[#94a3b8] uppercase tracking-wider">
+            Active Scanning Target Networks ({activeNetworks.length})
+          </h3>
+        </div>
+      </div>
+
       {isLoading || isUserLoading ? (
-        <div className="flex flex-wrap gap-2.5">
-           {[1, 2, 3].map((i) => (
-             <div key={i} className="w-24 h-9 bg-gray-100 animate-pulse rounded-full" />
-           ))}
+        <div className="flex flex-wrap gap-2">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="w-28 h-9 bg-[#111a2e] border border-[#1e2e4a] animate-pulse rounded-lg" />
+          ))}
         </div>
       ) : (
-        <div className="flex flex-wrap gap-2.5">
-          {activeNetworks.map((net, index) => (
-            <motion.div
+        <div className="flex flex-wrap gap-2">
+          {activeNetworks.map((net) => (
+            <div
               key={net.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white border border-[#E5E7EB] shadow-[0_2px_8px_rgba(0,0,0,0.015)] select-none cursor-pointer"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#111a2e] border border-[#1e2e4a] hover:border-[#2563eb]/50 transition-all select-none"
             >
               <div className="w-4 h-4 relative flex items-center justify-center shrink-0">
                 <Image 
@@ -88,12 +89,10 @@ export function SelectedNetworks() {
                   className="w-4 h-4 object-contain" 
                 />
               </div>
-              <span className="text-[13px] font-bold text-black">{net.name}</span>
-              <div className="flex items-center gap-1.5 pl-1.5 border-l border-[#F1F1F1]">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] text-[#6B7280] font-bold">Online</span>
-              </div>
-            </motion.div>
+              <span className="text-[13px] font-semibold text-[#f8fafc]">{net.name}</span>
+              <span className="text-[11px] font-mono text-[#60a5fa]">{net.ticker}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            </div>
           ))}
         </div>
       )}

@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "motion/react";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { BlockchainGrid } from "./blockchain-grid";
 import { useBlockchainSelection } from "@/src/hooks/useBlockchainSelection";
 
@@ -21,49 +20,45 @@ export function BlockchainSelector() {
   return (
     <div className="w-full max-w-[480px] mx-auto flex flex-col justify-start items-center">
       {/* Title Header */}
-      <div className="text-center mb-8 w-full">
-        <motion.h1
-          layoutId="onboarding-title"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[32px] font-bold text-black tracking-tight leading-tight"
-        >
-          Choose your blockchain networks
-        </motion.h1>
-        <p className="text-[15px] text-[#6B7280] mt-3 leading-relaxed">
-          Select the blockchain networks you want to include. You can always change these later in Settings.
+      <div className="text-center mb-6 w-full">
+        <h1 className="text-[24px] font-bold text-[#f8fafc] tracking-tight leading-tight">
+          Select Target Blockchains
+        </h1>
+        <p className="text-[14px] text-[#94a3b8] mt-1.5 leading-relaxed">
+          Choose the ledger networks to include in your cryptographic wallet scan session.
         </p>
       </div>
 
-      {/* Grid */}
-      <div className="w-full mb-8">
+      {/* Grid container */}
+      <div className="w-full mb-6 max-h-[420px] overflow-y-auto pr-1">
         <BlockchainGrid selectedIds={selectedIds} allowedIds={allowedIds} onToggle={toggleSelection} />
       </div>
 
       {/* Action Footer */}
-      <div className="w-full flex flex-col items-center gap-4">
-        <motion.button
+      <div className="w-full flex flex-col items-center gap-3">
+        <button
           type="button"
           disabled={!isEnabled || isSubmitting}
           onClick={handleContinue}
-          whileHover={isEnabled && !isSubmitting ? { y: -2, opacity: 0.95 } : {}}
-          whileTap={isEnabled && !isSubmitting ? { scale: 0.98 } : {}}
-          className="w-full h-[56px] rounded-xl bg-black text-white text-[15px] font-medium flex items-center justify-center transition-all duration-200 disabled:bg-[#D1D5DB] disabled:cursor-not-allowed disabled:transform-none shadow-sm"
+          className="w-full h-12 rounded-lg bg-[#2563eb] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white text-[14px] font-semibold flex items-center justify-center gap-2 transition-all duration-150 disabled:bg-[#1e2e4a] disabled:text-[#64748b] disabled:cursor-not-allowed shadow-[0_2px_12px_rgba(37,99,235,0.3)]"
         >
           {isSubmitting ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
+            <span className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" /> Initializing Scan Modules...
+            </span>
           ) : (
-            "Continue"
+            <span className="flex items-center gap-2">
+              Launch Recovery Scanner <ArrowRight className="w-4 h-4" />
+            </span>
           )}
-        </motion.button>
+        </button>
 
         <button
           type="button"
           onClick={handleSkip}
-          className="text-[14px] text-[#6B7280] hover:text-black font-medium transition-colors py-2"
+          className="text-[13px] text-[#94a3b8] hover:text-[#f8fafc] font-medium transition-colors py-1"
         >
-          Select later
+          Skip and configure later
         </button>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, animate } from "motion/react";
+import { animate } from "motion/react";
 import { Database, Landmark, ShieldCheck, CheckCircle } from "lucide-react";
 
 interface StatItemProps {
@@ -29,22 +29,19 @@ function StatCard({ label, value, prefix = "", suffix = "", icon, delay }: StatI
   }, [value, delay]);
 
   return (
-    <motion.div
-      whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(0,0,0,0.02)" }}
-      className="bg-white border border-[#E5E7EB] rounded-[20px] p-5 shadow-[0_4px_16px_rgba(0,0,0,0.01)] flex flex-col justify-between h-32 transition-all duration-200"
-    >
+    <div className="bg-[#111a2e] border border-[#1e2e4a] hover:border-[#2563eb]/40 rounded-xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.2)] flex flex-col justify-between h-28 transition-all">
       <div className="flex items-center justify-between">
-        <span className="text-[13px] text-[#6B7280] font-semibold">{label}</span>
-        <div className="w-8 h-8 rounded-lg bg-neutral-50 border border-neutral-100 flex items-center justify-center text-black shrink-0">
+        <span className="text-[12px] font-mono text-[#94a3b8] uppercase tracking-wider">{label}</span>
+        <div className="w-7 h-7 rounded-md bg-[#172440] border border-[#1e2e4a] flex items-center justify-center text-[#60a5fa] shrink-0">
           {icon}
         </div>
       </div>
       <div>
-        <h4 className="text-[26px] font-extrabold text-black tracking-tight leading-none">
-          {prefix}{val.toLocaleString("en-IN")}{suffix}
+        <h4 className="text-[22px] font-bold font-mono text-[#f8fafc] tracking-tight leading-none">
+          {prefix}{val.toLocaleString("en-US")}{suffix}
         </h4>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -58,31 +55,31 @@ export function StatsGrid({
   networkCount?: number;
 }) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
       <StatCard
-        label="Assets Connected"
+        label="Wallets Discovered"
         value={walletCount}
-        icon={<Database className="w-4 h-4" />}
+        icon={<Database className="w-3.5 h-3.5" />}
         delay={0.1}
       />
       <StatCard
-        label="Portfolio Value"
+        label="Recovered Valuation"
         value={totalValue}
         prefix="$"
-        icon={<Landmark className="w-4 h-4" />}
+        icon={<Landmark className="w-3.5 h-3.5" />}
         delay={0.2}
       />
       <StatCard
-        label="Networks Enabled"
+        label="Chains Active"
         value={networkCount}
-        icon={<ShieldCheck className="w-4 h-4" />}
+        icon={<ShieldCheck className="w-3.5 h-3.5" />}
         delay={0.3}
       />
       <StatCard
-        label="Profile Completion"
+        label="System Integrity"
         value={100}
         suffix="%"
-        icon={<CheckCircle className="w-4 h-4" />}
+        icon={<CheckCircle className="w-3.5 h-3.5" />}
         delay={0.4}
       />
     </div>
